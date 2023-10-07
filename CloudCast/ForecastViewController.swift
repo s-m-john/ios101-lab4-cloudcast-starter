@@ -7,6 +7,12 @@
 
 import UIKit
 
+struct Location {
+  let name: String
+  let latitude: Double
+  let longitude: Double
+}
+
 class ForecastViewController: UIViewController {
   
   @IBOutlet weak var locationLabel: UILabel!
@@ -17,9 +23,18 @@ class ForecastViewController: UIViewController {
   @IBOutlet weak var dateLabel: UILabel!
   @IBOutlet weak var forecastImageView: UIImageView!
   
+  private var locations = [Location]() // stores the different locations
   override func viewDidLoad() {
     super.viewDidLoad()
     addGradient()
+    
+    changeLocation(withLocationIndex: 0) // when the view loads, make sure the first location is shown
+    // Create a few locations to show the forecast for. Feel free to add your own custom location!
+    let sanJose = Location(name: "San Jose", latitude: 37.335480, longitude: -121.893028)
+    let manila = Location(name: "Manila", latitude: 12.8797, longitude: 121.7740)
+    let italy = Location(name: "Italy", latitude: 41.8719, longitude: 12.5674)
+    locations = [sanJose, manila, italy]
+      
   }
   
   private func addGradient() {
@@ -33,10 +48,14 @@ class ForecastViewController: UIViewController {
   }
   
   @IBAction func didTapBackButton(_ sender: UIButton) {
+    selectedLocationIndex = max(0, selectedLocationIndex - 1) // make sure selectedLocationIndex is always >= 0
+    changeLocation(withLocationIndex: selectedLocationIndex)
     
   }
   
   @IBAction func didTapForwardButton(_ sender: UIButton) {
+    selectedLocationIndex = min(locations.count - 1, selectedLocationIndex + 1) // make sure selectedLocationIndex is always < locations.count
+    changeLocation(withLocationIndex: selectedLocationIndex)
     
   }
 }
